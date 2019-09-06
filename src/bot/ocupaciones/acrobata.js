@@ -1,3 +1,11 @@
+import { 
+    DESCUBRIR,
+    ESQUIVAR,
+    LANZAR,
+    NADAR,
+    SALTAR,
+    TREPAR } from '../habilidades';
+
 class Acrobata {
 
    getPuntosHabilidad() {
@@ -16,8 +24,8 @@ class Acrobata {
            NADAR,
            SALTAR,
            TREPAR,
-           CUSTOM,
-           CUSTOM
+           'custom',
+           'custom'
        ]
    }
 }

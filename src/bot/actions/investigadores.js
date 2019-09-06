@@ -3,6 +3,7 @@ import Markup from 'telegraf/markup';
 import db from '../../bd';
 import { rollDice } from '../dices';
 import { ocupaciones } from '../ocupaciones';
+import { habilidades } from '../habilidades';
 
 function generateCaracteristicas(investigador) {
     const basicHab = ['fue', 'con', 'des', 'apa', 'pod'],
@@ -143,6 +144,7 @@ function getOcupaciones() {
 
     Object.keys(ocupaciones).forEach((ocupacio) => {
         text += `${i}: ${ocupacio}\n`;
+        i++;
     });
 
     return text;
@@ -153,9 +155,19 @@ function calcularPuntos(investigador, formula) {
 
     let result = 0;
     sums.forEach((multiplication) => {
-        const splittedMulti = multiplication.split('*'),
+        if (multiplication.indexOf('*')>-1){
+            const splittedMulti = multiplication.split('*'),
             hab = splittedMulti[0];
+        
             result += investigador.caracteristicas[hab] * splittedMulti[1];
+        } else if (multiplication.indexOf('/')> -1) {
+            const splittedMulti = multiplication.split('/'),
+            hab = splittedMulti[0];
+        
+            result += Math.floor(investigador.caracteristicas[hab] / splittedMulti[1]);
+        } else {
+            result += investigador.caracteristicas[multiplication];
+        }
     });
 
     return result;
@@ -166,16 +178,31 @@ function adoptarOcupacion(investigador, ocupacionKey) {
 
     investigador.ocupacion = ocupacionKey;
     investigador.puntos_habilidad = calcularPuntos(investigador, ocupacion.getPuntosHabilidad());
+
+    investigador.habilidades = {};
+
+    Object.keys(habilidades).forEach((hab) => {
+
+        investigador.habilidades[hab] = {
+            class: ocupacion.getHabilidades().includes(hab),
+            value: isNaN(habilidades[hab]) ? calcularPuntos(investigador, habilidades[hab]) : habilidades[hab]
+        }
+    });
+}
+
+function getHabilidad(investigador, index) {
+    return Object.keys(investigador.habilidades)[index];
 }
 
 
 export function addInvestigador() {
-    let investigador = {};
+    let investigador = {},
+        habilidad = null;
 
     const addWizard = new WizardScene('add-investigador',
         (ctx) => {
             investigador.playerId = ctx.from.id;
-            ctx.reply('Nuevo investigador.\nEscoge nombre:');
+            ctx.reply('Nuevo investigador para los años 20.\nEscoge nombre:');
             return ctx.wizard.next()
         },
         (ctx) => {
@@ -208,11 +235,54 @@ export function addInvestigador() {
             } else {
                 adoptarOcupacion(investigador, Object.keys(ocupaciones)[ocupacionIndex-1]);
 
-                ctx.reply(investigadorToString('', investigador));
+                let text = `Tienes ${investigador.puntos_habilidad} para gaster entre las siguiente habilidades:\n`;
+                Object.keys(investigador.habilidades).forEach((hab, i) => {
+                    if (investigador.habilidades[hab].class) {
+                        text += `${i+1}: ${hab} (${investigador.habilidades[hab].value})\n`;
+                    }
+                });
+                text += '\n¿En qué habilidad deseas gastar puntos?'
                 
+                ctx.reply(text);
+                return ctx.wizard.next()
             }
-            return ctx.wizard.leave()
-        }
+        },
+        (ctx) => {
+            const hab = ctx.message.text;
+
+            if (isNaN(hab)){
+                ctx.reply('Escoge una habilidad indicando el número de habilidad (que sea de ocupación):');
+            }else {
+                habilidad = getHabilidad(investigador, hab-1);
+
+                if (!investigador.habilidades[habilidad].class) {
+                    ctx.reply(`Tienes que escoger una habilidad de tu ocupación.`);
+                } else {
+                    ctx.reply(`${habilidad} tiene actualmente ${investigador.habilidades[habilidad].value} puntos.\n ¿Cuantos puntos (${investigador.puntos_habilidad} disponibles) quieres gastar?`);
+                    return ctx.wizard.next()
+                }
+            }
+        },
+        (ctx) => {
+            let puntos = ctx.message.text;
+
+            if (isNaN(puntos) || puntos < 0 || puntos > investigador.puntos_habilidad || (investigador.habilidades[habilidad].value + parseInt(puntos) > 99)){
+                console.log(puntos);
+                console.log(investigador.habilidades[habilidad].value + puntos);
+                ctx.reply('Una habilidad sólo puede llegar a 99 puntos.');
+            } else {
+                investigador.habilidades[habilidad].value += parseInt(puntos);
+                investigador.puntos_habilidad -= parseInt(puntos);
+
+                if (investigador.puntos_habilidad > 0) {
+                    ctx.reply('Escoge una habilidad indicando el número de habilidad:');
+                    return ctx.wizard.back();
+                } else {
+                    ctx.reply('Todos los puntos agotados!:')
+                    return ctx.wizard.next()
+                }
+            }
+        },
     );
 
     return addWizard;
