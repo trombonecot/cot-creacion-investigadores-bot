@@ -1,4 +1,4 @@
-import { add } from '../actions/characters';
+import { add } from '../actions/investigadores';
 
 
 export const options = [
