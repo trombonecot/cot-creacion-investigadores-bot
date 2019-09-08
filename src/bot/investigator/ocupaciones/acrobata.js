@@ -16,17 +16,21 @@ class Acrobata {
        return "9-20";
    }
 
-   getHabilidades() {
+   getHabilidadesClase() {
        return [
            DESCUBRIR,
            ESQUIVAR,
            LANZAR,
            NADAR,
            SALTAR,
-           TREPAR,
-           'custom',
-           'custom'
-       ]
+           TREPAR
+       ];
+   }
+
+   getCustomHabilidadesClase() {
+       return {
+           num: 2
+       };
    }
 }
 

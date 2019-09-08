@@ -110,3 +110,4 @@ export const habilidades = {
     tasacion: 5,
     trepar: 20
 }
+
