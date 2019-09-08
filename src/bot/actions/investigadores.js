@@ -346,6 +346,7 @@ export function list(ctx) {
     let text = 'Investigadores creados:\n';
 
     db.find( { playerId: ctx.from.id }).then((investigadores) => {
+        console.log(investigadores);
         investigadores.forEach((inv, i) => {
             text += `${i+1}: ${inv.name} (${inv.ocupacion})\n`;
         });
