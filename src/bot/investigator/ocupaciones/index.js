@@ -5,3 +5,4 @@ export const ocupaciones = {
     'acrobata': new Acrobata(),
     'actor-teatro': new ActorTeatro()
 }
+

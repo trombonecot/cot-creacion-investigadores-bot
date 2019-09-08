@@ -1,11 +1,9 @@
 import WizardScene from 'telegraf/scenes/wizard';
-import Markup from 'telegraf/markup';
 import db from '../../bd';
 import { ocupaciones } from '../investigator/ocupaciones';
 import { habilidades } from '../investigator/habilidades';
-import { generateCaracteristicas, calculaAtributosDerivados } from '../services/generator/caracteristics';
-import { adaptarEdad } from '../services/generator/age';
-import { calcularMOV } from '../services/generator/movement';
+import { printInvestigador } from './investigador';
+import Investigador from '../investigator';
 
 function getOcupaciones() {
     let text = 'Elige una ocupacion (usa el número para indicar cual):\n',
@@ -17,85 +15,6 @@ function getOcupaciones() {
     });
 
     return text;
-}
-
-function printInvestigador(investigador) {
-    let text = `Nombre: ${investigador.name}\n`;
-    text += `Ocupación: ${investigador.ocupacion}\n`;
-    text += `Edad: ${investigador.edad}\n`;
-    text += `===============\n`;
-    text += `Características\n`;
-    text += `===============\n`;
-    Object.keys(investigador.caracteristicas).forEach((hab) => {
-        const valor = investigador.caracteristicas[hab];
-        text += `${hab.toUpperCase()}: ${valor}/${Math.floor(valor/2)}/${Math.floor(valor/5)}\n`;
-    });
-    text += `===============\n`;
-    text += `Puntos de vida: ${investigador.vida}\n`;
-    text += `Puntos de magia: ${investigador.magia}\n`;
-    text += `Puntos de cordura: ${investigador.cordura}\n`;
-    text += `Puntos de suerte: ${investigador.suerte}\n`;
-    text += `===============\n`;
-    text += `Habilidades\n`;
-    text += `===============\n`;
-    Object.keys(investigador.habilidades).forEach((hab) => {
-        const valor = investigador.habilidades[hab].value;
-        text += `${hab}: ${valor}/${Math.floor(valor/2)}/${Math.floor(valor/5)}\n`;
-    });
-    text += `===============\n`;
-    text += `Combate\n`;
-    text += `===============\n`;
-    text += `Bonif. Daño: ${investigador.bd}\n`;
-    text += `Corpulencia: ${investigador.corpulencia}\n`;
-
-    const esquivar = investigador.habilidades.esquivar.value;
-    text += `Esquivar: ${esquivar}/${Math.floor(esquivar/2)}/${Math.floor(esquivar/5)}\n`;
-
-    return text;
-}
-
-function calcularPuntos(investigador, formula) {
-    const sums = formula.split('+');
-
-    let result = 0;
-    sums.forEach((multiplication) => {
-        if (multiplication.indexOf('*')>-1){
-            const splittedMulti = multiplication.split('*'),
-            hab = splittedMulti[0];
-        
-            result += investigador.caracteristicas[hab] * splittedMulti[1];
-        } else if (multiplication.indexOf('/')> -1) {
-            const splittedMulti = multiplication.split('/'),
-            hab = splittedMulti[0];
-        
-            result += Math.floor(investigador.caracteristicas[hab] / splittedMulti[1]);
-        } else {
-            result += investigador.caracteristicas[multiplication];
-        }
-    });
-
-    return result;
-}
-
-function adoptarOcupacion(investigador, ocupacionKey) {
-    const ocupacion = ocupaciones[ocupacionKey];
-
-    investigador.ocupacion = ocupacionKey;
-    investigador.puntos_habilidad = calcularPuntos(investigador, ocupacion.getPuntosHabilidad());
-
-    investigador.habilidades = {};
-
-    Object.keys(habilidades).forEach((hab) => {
-        investigador.habilidades[hab] = {
-            class: ocupacion.getHabilidadesClase().includes(hab),
-            value: isNaN(habilidades[hab]) ? calcularPuntos(investigador, habilidades[hab]) : habilidades[hab]
-        }
-    });
-
-    investigador.habilidades.custom = !!ocupacion.getCustomHabilidadesClase() ? ocupacion.getCustomHabilidadesClase() : {num: 0};
-    investigador.credito = ocupacion.getCredito();
-
-    return ocupacion;
 }
 
 function getHabilidad(investigador, index) {
@@ -144,29 +63,23 @@ export function addInvestigador() {
     const addWizard = new WizardScene('add-investigador',
         (ctx) => {
             //1
-            investigador.playerId = ctx.from.id;
             ctx.reply('Nuevo investigador para los años 20.\nEscoge nombre:');
             return ctx.wizard.next()
         },
         (ctx) => {
             //2
-            investigador.name = ctx.message.text;
-            ctx.reply(generateCaracteristicas(investigador)).then(() => {
-                ctx.reply('Edad del investigador:');
-                return ctx.wizard.next()
-            });
+            investigador = new Investigador(ctx.from.id, ctx.message.text);
+            ctx.reply('Edad del investigador:');
+            return ctx.wizard.next();
         },
         (ctx) => {
             //3
-            investigador.edad = ctx.message.text;
+            const edad = ctx.message.text;
 
-            if (isNaN(investigador.edad) || investigador.edad < 15 || investigador.edad > 88) {
+            if (isNaN(edad) || edad < 15 || edad > 88) {
                 ctx.reply('Edad incorrecta. Introduce una edad entre 15 y 88:');
             } else {
-                adaptarEdad(investigador);
-                calcularMOV(investigador);
-                calculaAtributosDerivados(investigador);
-
+                investigador.setEdad(edad);
                 ctx.reply(getOcupaciones())
 
                 return ctx.wizard.next()
@@ -179,12 +92,10 @@ export function addInvestigador() {
             if (isNaN(ocupacionIndex) || ocupacionIndex > Object.keys(ocupaciones).length) {
                 ctx.reply('Ocupación incorrecta. Elige una:')
             } else {
-                adoptarOcupacion(investigador, Object.keys(ocupaciones)[ocupacionIndex-1]);
+                investigador.setOcupacion(Object.keys(ocupaciones)[ocupacionIndex-1]);
 
                 let text = '';
-
                 if (investigador.habilidades.custom.num > 0 ) {
-                    console.log(investigador.habilidades.custom.num);
                     text += printHabilidadesCustom(text, investigador);
                 } else {
                     text += printHabilidades(text, investigador);

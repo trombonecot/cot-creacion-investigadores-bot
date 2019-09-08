@@ -8,6 +8,10 @@ import {
 
 class Acrobata {
 
+    getName() {
+        return 'acrobata';
+    }
+
    getPuntosHabilidad() {
        return "edu*2+des*2";
    }

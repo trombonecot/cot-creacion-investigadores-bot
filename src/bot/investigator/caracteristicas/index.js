@@ -1,4 +1,4 @@
-import { rollDice } from '../dices';
+import { rollDice } from '../../services/dices';
 
 export function generateCaracteristicas(investigador) {
     const basicHab = ['fue', 'con', 'des', 'apa', 'pod'],
