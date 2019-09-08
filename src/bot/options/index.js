@@ -1,4 +1,4 @@
-import { add } from '../actions/investigadores';
+import { add, list, detail } from '../actions/investigadores';
 
 
 export const options = [
@@ -12,7 +12,7 @@ export const options = [
         name: "lista",
         type: "command",
         description: "Lista de investigadores",
-        action: null
+        action: list
     },
     {
         name: "detalle",

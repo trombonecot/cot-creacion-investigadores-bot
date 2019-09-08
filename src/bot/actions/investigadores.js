@@ -331,6 +331,8 @@ export function addInvestigador() {
                     delete investigador.habilidades.custom;
 
                     ctx.reply(printInvestigador(investigador));
+
+                    db.insert(investigador);
                     return ctx.scene.leave();
                 }
             }
@@ -338,6 +340,18 @@ export function addInvestigador() {
     );
 
     return addWizard;
+}
+
+export function list(ctx) {
+    let text = 'Investigadores creados:\n';
+
+    db.find( { playerId: ctx.from.id }).then((investigadores) => {
+        investigadores.forEach((inv, i) => {
+            text += `${i+1}: ${inv.name} (${inv.ocupacion})\n`;
+        });
+
+        ctx.reply(text);
+   });
 }
 
 export function add(ctx) {
