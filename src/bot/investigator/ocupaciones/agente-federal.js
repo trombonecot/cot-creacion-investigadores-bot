@@ -12,7 +12,7 @@ class AgenteFederal {
    }
 
    getCredito() {
-       return "20-90";
+       return "20-40";
    }
 
    getHabilidadesClase() {
