@@ -16,6 +16,7 @@ class Investigador {
     setOcupacion(ocupacionName) {
         this.ocupacion = new ocupaciones[ocupacionName];
         this.puntos_habilidad = calcularPuntos(this, this.ocupacion.getPuntosHabilidad());  
+        this.credito = this.ocupacion.getCredito();
 
         this.initHabilidades();
     }
@@ -32,7 +33,9 @@ class Investigador {
 
     initHabilidades(){
         this.habilidades = {};
+        console.log(this.ocupacion.getHabilidadesClase());
         Object.keys(habilidades).forEach((hab) => {
+            console.log(hab);
             this.habilidades[hab] = {
                 class: this.ocupacion.getHabilidadesClase().includes(hab),
                 value: isNaN(habilidades[hab]) ? calcularPuntos(this, habilidades[hab]) : habilidades[hab]

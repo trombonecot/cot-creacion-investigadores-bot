@@ -11,8 +11,9 @@ export function getHabilidadForCustom(investigador, index) {
 
 export function printHabilidades(text, investigador, deOcupacion = true) {
     text = `Tienes ${investigador.puntos_habilidad} para gastar entre las siguiente habilidades:\n`;
+    
     Object.keys(investigador.habilidades).forEach((hab, i) => {
-        if ((!deOcupacion || investigador.habilidades[hab].class) && hab != 'custom') {
+        if ((!deOcupacion || investigador.habilidades[hab].class)) {
             text += `${i+1}: ${hab} (${investigador.habilidades[hab].value})\n`;
         }
     });
@@ -34,7 +35,7 @@ export function printHabilidadesCustom(text, investigador) {
         });
     } else {
         Object.keys(investigador.habilidades).forEach((hab, i) => {
-            if (!investigador.habilidades[hab].class && hab != 'custom') {
+            if (!investigador.habilidades[hab].class) {
                 text += `${i+1}: ${hab} (${investigador.habilidades[hab].value})\n`;
             }
         });
