@@ -9,7 +9,7 @@ class Artesano {
 
    getPuntosHabilidad() {
        // TODO: des o fue
-       return "edu*4+des*2";
+       return "edu*2+des*2";
    }
 
    getCredito() {

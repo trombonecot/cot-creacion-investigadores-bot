@@ -9,6 +9,12 @@ import Aristocrata from "./aristocrata";
 import Arqueologo from "./arqueologo";
 import Arquitecto from "./arquitecto";
 import Artesano from "./artesano";
+import Artista from "./artista";
+import Atleta from "./atleta";
+import AyudanteLaboratorio from "./ayudante-laboratorio";
+import Barman from "./barman";
+import Bibliotecario from "./bibliotecario";
+import Bombero from "./bombero";
 
 export const ocupaciones = {
     'acrobata': Acrobata,
@@ -21,6 +27,14 @@ export const ocupaciones = {
     'aristocrata': Aristocrata,
     'arqueologo': Arqueologo,
     'arquitecto': Arquitecto,
-    'artesano': Artesano
+    'artesano': Artesano,
+    'artista': Artista,
+    'atleta': Atleta,
+    'ayudante-laboratorio': AyudanteLaboratorio,
+    'barman': Barman,
+    'bibliotecario': Bibliotecario,
+    'bombero': Bombero,
+    
+
 }
 
