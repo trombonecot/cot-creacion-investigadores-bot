@@ -15,6 +15,15 @@ import AyudanteLaboratorio from "./ayudante-laboratorio";
 import Barman from "./barman";
 import Bibliotecario from "./bibliotecario";
 import Bombero from "./bombero";
+import Boxeador from "./boxeador";
+import Buzo from "./buzo";
+import Camarero from './camarero';
+import Camillero from "./camillero";
+import Cazador from "./cazador";
+import CazaRecompensas from "./cazarecompensas";
+import Cientifico from "./cientifico";
+import CirujanoForense from "./cirujano-forense";
+import Clerigo from "./clerigo";
 
 export const ocupaciones = {
     'acrobata': Acrobata,
@@ -34,7 +43,16 @@ export const ocupaciones = {
     'barman': Barman,
     'bibliotecario': Bibliotecario,
     'bombero': Bombero,
-    
+    'boxeador': Boxeador,
+    'buzo': Buzo,
+    'camarero': Camarero,
+    'camillero': Camillero,
+    'cazador': Cazador,
+    'cazarecompensas': CazaRecompensas,
+    'cientifico': Cientifico,
+    'cirujano-forense': CirujanoForense,
+    'clerigo': Clerigo
+
 
 }
 
