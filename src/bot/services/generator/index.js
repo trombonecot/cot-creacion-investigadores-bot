@@ -4,6 +4,7 @@ export function printInvestigador (investigador) {
     let text = `Nombre: ${investigador.name}\n`;
     text += `Ocupación: ${investigador.ocupacion.name}\n`;
     text += `Edad: ${investigador.edad}\n`;
+    text += `Crédito: ${investigador.credito}\n`;
     text += `===============\n`;
     text += `Características\n`;
     text += `===============\n`;
