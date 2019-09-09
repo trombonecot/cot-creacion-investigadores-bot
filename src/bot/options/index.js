@@ -18,6 +18,6 @@ export const options = [
         name: "detalle",
         type: "command",
         description: "Ver detalle de un investigador",
-        action: null
+        action: detail
     }
 ];

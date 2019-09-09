@@ -8,8 +8,9 @@ import {
 
 class Acrobata {
 
-    getName() {
-        return 'acrobata';
+    constructor() {
+        this.customHabilidades = [{},{}];
+        this.name = 'acrobata';
     }
 
    getPuntosHabilidad() {
@@ -31,11 +32,6 @@ class Acrobata {
        ];
    }
 
-   getCustomHabilidadesClase() {
-       return {
-           num: 2
-       };
-   }
 }
 
 export default Acrobata;

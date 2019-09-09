@@ -1,4 +1,5 @@
 import { rollDice } from '../../services/dices';
+import { calculaAtributosDerivados } from '../caracteristicas';
 
 function mejorarEDU(investigador) {
     const tirada = rollDice("1D100");
@@ -56,9 +57,13 @@ export function adaptarEdad(investigador) {
             mejorarEDU(investigador);
             break;
     }
+
+
+    calcularMOV(investigador);
+    calculaAtributosDerivados(investigador);
 }
 
-export function calcularMOV(investigador) {
+function calcularMOV(investigador) {
     if (investigador.caracteristicas.fue < investigador.caracteristicas.tam && investigador.caracteristicas.des < investigador.caracteristicas.tam ) {
         investigador.caracteristicas.mov = 7;
     } else if (investigador.caracteristicas.fue > investigador.caracteristicas.tam || investigador.caracteristicas.des > investigador.caracteristicas.tam ) {

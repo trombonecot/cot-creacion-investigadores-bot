@@ -1,60 +1,12 @@
 import WizardScene from 'telegraf/scenes/wizard';
 import db from '../../bd';
 import { ocupaciones } from '../investigator/ocupaciones';
-import { habilidades } from '../investigator/habilidades';
-import { printInvestigador } from './investigador';
 import Investigador from '../investigator';
+import { generateCaracteristicas, calcularAttributosCombat } from '../mutations/caracteristicas';
+import { adaptarEdad } from '../mutations/edad';
+import { getOcupaciones, printHabilidadesCustom, printHabilidades, getHabilidadForCustom, getHabilidad } from './utils';
+import { printInvestigador } from '../services/generator';
 
-function getOcupaciones() {
-    let text = 'Elige una ocupacion (usa el número para indicar cual):\n',
-        i = 1;
-
-    Object.keys(ocupaciones).forEach((ocupacio) => {
-        text += `${i}: ${ocupacio}\n`;
-        i++;
-    });
-
-    return text;
-}
-
-function getHabilidad(investigador, index) {
-    return Object.keys(investigador.habilidades)[index];
-}
-
-function getHabilidadForCustom(investigador, index) {
-    return !!investigador.habilidades.custom.habilidades ? Object.keys(investigador.habilidades.custom.habilidades)[index] : getHabilidad(investigador, index);
-}
-
-function printHabilidades(text, investigador, deOcupacion = true) {
-    text = `Tienes ${investigador.puntos_habilidad} para gastar entre las siguiente habilidades:\n`;
-    Object.keys(investigador.habilidades).forEach((hab, i) => {
-        if (!deOcupacion || investigador.habilidades[hab].class) {
-            text += `${i+1}: ${hab} (${investigador.habilidades[hab].value})\n`;
-        }
-    });
-    text += '\n¿En qué habilidad deseas gastar puntos?';
-
-    return text;
-}
-
-function printHabilidadesCustom(text, investigador) {
-    if (!!investigador.habilidades.custom.habilidades) {
-        text = `Tienes que escoger ${investigador.habilidades.custom.num} de entre: \n`;
-        Object.keys(investigador.habilidades.custom.habilidades).forEach((hab, i) => {
-            if (!investigador.habilidades[hab].class) {
-                text += `${i+1}: ${hab} (${investigador.habilidades[hab].value})\n`;
-            }
-        });
-    } else {
-        text = `Tienes que escoger ${investigador.habilidades.custom.num} habilidades de entre: \n`;
-        Object.keys(investigador.habilidades).forEach((hab, i) => {
-            if (!investigador.habilidades[hab].class && hab != 'custom') {
-                text += `${i+1}: ${hab} (${investigador.habilidades[hab].value})\n`;
-            }
-        });
-    } 
-    return text;
-}
 
 export function addInvestigador() {
     let investigador = {},
@@ -69,6 +21,8 @@ export function addInvestigador() {
         (ctx) => {
             //2
             investigador = new Investigador(ctx.from.id, ctx.message.text);
+            generateCaracteristicas(investigador);
+
             ctx.reply('Edad del investigador:');
             return ctx.wizard.next();
         },
@@ -80,6 +34,8 @@ export function addInvestigador() {
                 ctx.reply('Edad incorrecta. Introduce una edad entre 15 y 88:');
             } else {
                 investigador.setEdad(edad);
+                adaptarEdad(investigador);
+
                 ctx.reply(getOcupaciones())
 
                 return ctx.wizard.next()
@@ -93,9 +49,10 @@ export function addInvestigador() {
                 ctx.reply('Ocupación incorrecta. Elige una:')
             } else {
                 investigador.setOcupacion(Object.keys(ocupaciones)[ocupacionIndex-1]);
+                
 
                 let text = '';
-                if (investigador.habilidades.custom.num > 0 ) {
+                if (investigador.ocupacion.customHabilidades.length > 0 ) {
                     text += printHabilidadesCustom(text, investigador);
                 } else {
                     text += printHabilidades(text, investigador);
@@ -115,12 +72,10 @@ export function addInvestigador() {
             }else {
                 habilidad = getHabilidadForCustom(investigador, hab-1);
 
-                investigador.habilidades[habilidad].class = true;
-                investigador.habilidades.custom.num--;
+                investigador.setHabilidadOcupacion(habilidad);
 
                 let text = `${habilidad} asignada como habilidad de ocupación. \n`;
-
-                if (investigador.habilidades.custom.num == 0) {
+                if (investigador.ocupacion.customHabilidades.length == 0) {
                     text += printHabilidades(text, investigador);
                     ctx.reply(text);
                     return ctx.wizard.next();
@@ -154,8 +109,7 @@ export function addInvestigador() {
             if (isNaN(puntos) || puntos < 0 || puntos > investigador.puntos_habilidad || (investigador.habilidades[habilidad].value + parseInt(puntos) > 99)){
                 ctx.reply('Una habilidad sólo puede llegar a 99 puntos.');
             } else {
-                investigador.habilidades[habilidad].value += parseInt(puntos);
-                investigador.puntos_habilidad -= parseInt(puntos);
+                investigador.setPuntosHabilidad(puntos);
 
                 if (investigador.puntos_habilidad > 0) {
                     ctx.reply('Escoge una habilidad indicando el número de habilidad:');
@@ -198,48 +152,7 @@ export function addInvestigador() {
                     ctx.reply('Escoge una habilidad indicando el número de habilidad:');
                     return ctx.wizard.back();
                 } else {
-                    const fueTam = investigador.caracteristicas.fue + investigador.caracteristicas.tam;
-
-                    switch(true) {
-                        case (fueTam < 65):
-                            investigador.bd = -2;
-                            investigador.corpulencia = -2;
-                            break;
-                        case (fueTam < 85):
-                            investigador.bd = -1;
-                            investigador.corpulencia = -1;
-                            break;
-                        case (fueTam < 125):
-                            investigador.bd = 0;
-                            investigador.corpulencia = 0;
-                            break;
-                        case (fueTam < 165):
-                            investigador.bd = "1D4";
-                            investigador.corpulencia = 1;
-                            break;
-                        case (fueTam < 205):
-                            investigador.bd = "1D6";
-                            investigador.corpulencia = 2;
-                            break;
-                        case (fueTam < 285):
-                            investigador.bd = "2D6";
-                            investigador.corpulencia = 3;
-                            break;
-                        case (fueTam < 365):
-                            investigador.bd = "3D6";
-                            investigador.corpulencia = 4;
-                            break;
-                        case (fueTam < 445):
-                            investigador.bd = "4D6";
-                            investigador.corpulencia = 5;
-                            break;
-                        case (fueTam < 525):
-                            investigador.bd = "5D6";
-                            investigador.corpulencia = 6;
-                            break;
-                    }
-
-                    delete investigador.habilidades.custom;
+                    calcularAttributosCombat(investigador);
 
                     ctx.reply(printInvestigador(investigador));
 
@@ -256,10 +169,9 @@ export function addInvestigador() {
 export function list(ctx) {
     let text = 'Investigadores creados:\n';
 
-    db.find( { playerId: ctx.from.id }).then((investigadores) => {
-        console.log(investigadores);
+    return db.find( { playerId: ctx.from.id }).then((investigadores) => {
         investigadores.forEach((inv, i) => {
-            text += `${i+1}: ${inv.name} (${inv.ocupacion})\n`;
+            text += `${i}: ${inv.name} (${inv.ocupacion.name})\n`;
         });
 
         ctx.reply(text);
@@ -268,4 +180,36 @@ export function list(ctx) {
 
 export function add(ctx) {
     ctx.scene.enter('add-investigador')
+}
+
+export function addDetailWizard() {
+    let investigador = {};
+
+    const addWizard = new WizardScene('view-investigador',
+        (ctx) => {
+            list(ctx).then(() => {
+                ctx.reply('¿Qué investigador quieres ver?');
+                return ctx.wizard.next();
+            });
+        },
+        (ctx) => {
+            // 9
+            let investigador = ctx.message.text;
+
+            db.find( { playerId: ctx.from.id }).then((investigadores) => {
+                if (isNaN(investigador) && investigadores.length > investigador ){
+                    ctx.reply('Escoge un investigador existente');
+                } else {
+                    ctx.reply(printInvestigador(investigadores[investigador]));
+                    return ctx.scene.leave();
+                }
+           });
+        }
+    );
+
+    return addWizard;
+}
+
+export function detail(ctx) {
+    ctx.scene.enter('view-investigador')
 }

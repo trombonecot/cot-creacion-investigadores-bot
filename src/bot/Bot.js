@@ -3,7 +3,7 @@ import session  from 'telegraf/session';
 import Stage from 'telegraf/stage';
 
 import db from '../bd';
-import { addInvestigador } from './actions/investigadores';
+import { addInvestigador, addDetailWizard } from './actions/investigadores';
 import { options } from './options';
 
 
@@ -37,7 +37,8 @@ class Bot {
 
     configureWizards() {
         const stage = new Stage([
-            addInvestigador()
+            addInvestigador(),
+            addDetailWizard()
         ]);
 
         this.bot.use(session());

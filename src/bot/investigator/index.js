@@ -1,5 +1,3 @@
-import { generateCaracteristicas, calculaAtributosDerivados } from "./caracteristicas";
-import { adaptarEdad, calcularMOV } from "./edad";
 import { ocupaciones } from "./ocupaciones";
 import { habilidades } from "./habilidades";
 import { calcularPuntos } from "./utils";
@@ -9,26 +7,28 @@ class Investigador {
     constructor (playerId, name) {
         this.playerId = playerId;
         this.name = name;
-
-        generateCaracteristicas(this);
     }
 
     setEdad(edad) {
         this.edad = edad;
-        adaptarEdad(this);
-        calcularMOV(this);
-        calculaAtributosDerivados(this);
     }
 
     setOcupacion(ocupacionName) {
-        this.ocupacion = ocupaciones[ocupacionName];
+        this.ocupacion = new ocupaciones[ocupacionName];
+        console.log(this.ocupacion);
         this.puntos_habilidad = calcularPuntos(this, this.ocupacion.getPuntosHabilidad());  
 
         this.initHabilidades();
+    }
 
-        // TODO: more complex custom habilities (different groups)
-        this.habilidades.custom = !!this.ocupacion.getCustomHabilidadesClase() ? this.ocupacion.getCustomHabilidadesClase() : { num: 0 };
+    setHabilidadOcupacion(habilidad) {
+        this.habilidades[habilidad].class = true;
+        this.ocupacion.customHabilidades.shift();
+    }
 
+    setPuntosHabilidad(habilidad, puntos) {
+        this.habilidades[habilidad].value += parseInt(puntos);
+        this.puntos_habilidad -= parseInt(puntos);
     }
 
     initHabilidades(){
@@ -40,14 +40,6 @@ class Investigador {
             }
         });
     }
-
-
-
-
-
-
-
-
 }
 
 export default Investigador;

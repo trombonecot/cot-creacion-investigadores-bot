@@ -1,6 +1,14 @@
-import { ARTE_ARTESANIA_CUSTOM, DISFRAZARSE, CHARLATENERIA, ENCANTO, HISTORIA, PSICOLOGIA } from "../habilidades";
+import { ARTE_ARTESANIA_CUSTOM, DISFRAZARSE, CHARLATENERIA, ENCANTO, HISTORIA, PSICOLOGIA, INTIMIDAR, PERSUASION, COMBATIR_CUSTOM } from "../habilidades";
 
 class ActorTeatro {
+
+    constructor () {
+        this.customHabilidades = [{ list: [CHARLATENERIA, ENCANTO, INTIMIDAR, PERSUASION]
+            },{  list: [CHARLATENERIA, ENCANTO, INTIMIDAR, PERSUASION] }, 
+            {}
+        ];
+        this.name = 'actor-teatro';
+    }
 
    getPuntosHabilidad() {
        return "edu*2+apa*2";
@@ -10,17 +18,13 @@ class ActorTeatro {
        return "9-40";
    }
 
-   getHabilidades() {
-       // TODO: ESCOLLIR ENTRE CHARLATENERIA I.,...
+   getHabilidadesClase() {
        return [
            ARTE_ARTESANIA_CUSTOM,
-           COMBATIR,
+           COMBATIR_CUSTOM,
            DISFRAZARSE,
-           CHARLATENERIA,
-           ENCANTO,
            HISTORIA,
-           PSICOLOGIA,
-           'custom'
+           PSICOLOGIA
        ]
    }
 }
