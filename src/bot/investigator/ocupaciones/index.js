@@ -29,13 +29,15 @@ import Contable from "./contable";
 import Criminal from "./criminal";
 import CuidadorZoo from "./cuidador-zoo";
 import Detective from "./detective";
+import Enfermero from "./enfermero";
+import Enterrador from "./enterrador";
+import Escritor from "./escritor";
 
 export const ocupaciones = {
     'acrobata': Acrobata,
     'actor-teatro': ActorTeatro,
     'actor-cine': ActorCine,
     'agente-federal': AgenteFederal,
-    'alienista': Alienista,
     'alpinista': Alpinista,
     'anticuario': Anticuario,
     'aristocrata': Aristocrata,
@@ -61,7 +63,10 @@ export const ocupaciones = {
     'contable': Contable,
     'criminal': Criminal,
     'cuidador-zoo': CuidadorZoo,
-    'detective': Detective
+    'detective': Detective,
+    'enfermero': Enfermero,
+    'enterrador': Enterrador,
+    'escritor': Escritor
 
 
 
