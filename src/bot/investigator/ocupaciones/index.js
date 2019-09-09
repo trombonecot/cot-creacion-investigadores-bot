@@ -24,6 +24,11 @@ import CazaRecompensas from "./cazarecompensas";
 import Cientifico from "./cientifico";
 import CirujanoForense from "./cirujano-forense";
 import Clerigo from "./clerigo";
+import Conductor from "./conductor";
+import Contable from "./contable";
+import Criminal from "./criminal";
+import CuidadorZoo from "./cuidador-zoo";
+import Detective from "./detective";
 
 export const ocupaciones = {
     'acrobata': Acrobata,
@@ -51,7 +56,13 @@ export const ocupaciones = {
     'cazarecompensas': CazaRecompensas,
     'cientifico': Cientifico,
     'cirujano-forense': CirujanoForense,
-    'clerigo': Clerigo
+    'clerigo': Clerigo,
+    'conductor': Conductor,
+    'contable': Contable,
+    'criminal': Criminal,
+    'cuidador-zoo': CuidadorZoo,
+    'detective': Detective
+
 
 
 }
