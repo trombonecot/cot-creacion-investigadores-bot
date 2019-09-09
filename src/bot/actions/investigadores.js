@@ -106,10 +106,10 @@ export function addInvestigador() {
             // 7
             let puntos = ctx.message.text;
 
-            if (isNaN(puntos) || puntos < 0 || puntos > investigador.puntos_habilidad || (investigador.habilidades[habilidad].value + parseInt(puntos) > 99)){
+            if (isNaN(puntos) || puntos < 0 || puntos > investigador.puntos_habilidad || (investigador.habilidades[habilidad].value + parseInt(puntos) > 90)){
                 ctx.reply('Una habilidad sólo puede llegar a 99 puntos.');
             } else {
-                investigador.setPuntosHabilidad(puntos);
+                investigador.setPuntosHabilidad(habilidad, puntos);
 
                 if (investigador.puntos_habilidad > 0) {
                     ctx.reply('Escoge una habilidad indicando el número de habilidad:');
@@ -142,8 +142,8 @@ export function addInvestigador() {
             // 9
             let puntos = ctx.message.text;
 
-            if (isNaN(puntos) || puntos < 0 || puntos > investigador.puntos_habilidad || (investigador.habilidades[habilidad].value + parseInt(puntos) > 99)){
-                ctx.reply('Una habilidad sólo puede llegar a 99 puntos.');
+            if (isNaN(puntos) || puntos < 0 || puntos > investigador.puntos_habilidad || (investigador.habilidades[habilidad].value + parseInt(puntos) > 90)){
+                ctx.reply('Una habilidad sólo puede llegar a 90 puntos.');
             } else {
                 investigador.habilidades[habilidad].value += parseInt(puntos);
                 investigador.puntos_habilidad -= parseInt(puntos);

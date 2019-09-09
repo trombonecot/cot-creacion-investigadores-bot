@@ -15,7 +15,6 @@ class Investigador {
 
     setOcupacion(ocupacionName) {
         this.ocupacion = new ocupaciones[ocupacionName];
-        console.log(this.ocupacion);
         this.puntos_habilidad = calcularPuntos(this, this.ocupacion.getPuntosHabilidad());  
 
         this.initHabilidades();
