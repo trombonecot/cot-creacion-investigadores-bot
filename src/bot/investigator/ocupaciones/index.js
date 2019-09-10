@@ -32,6 +32,25 @@ import Detective from "./detective";
 import Enfermero from "./enfermero";
 import Enterrador from "./enterrador";
 import Escritor from "./escritor";
+import Espia from "./espia";
+import Estudiante from "./estudiante";
+import Explorador from "./explorador";
+import Farmaceutico from "./farmaceutico";
+import Fotografo from "./fotografo";
+import Gangster from "./gangster";
+import Granjero from "./granjero";
+import InspectorPolicia from "./inspector-policia";
+import InvestigadorPrivado from "./investigador-privado";
+import Juez from "./juez";
+import Loquero from "./loquero";
+import Marinero from "./marinero";
+import Medico from "./medico";
+import Militar from "./militar";
+import Misionero from "./misionero";
+import Musico from "./musico";
+import Periodista from "./periodista";
+import PilotoAviador from "./piloto-aviador";
+import Professor from "./professor";
 
 export const ocupaciones = {
     'acrobata': Acrobata,
@@ -66,7 +85,30 @@ export const ocupaciones = {
     'detective': Detective,
     'enfermero': Enfermero,
     'enterrador': Enterrador,
-    'escritor': Escritor
+    'escritor': Escritor,
+    'espia': Espia,
+    'estudiante': Estudiante,
+    'explorador': Explorador,
+    'farmaceutico': Farmaceutico,
+    'fotografo': Fotografo,
+    'gangster': Gangster,
+    'granjero': Granjero,
+    'inspector-policia': InspectorPolicia,
+    'investigador-privado': InvestigadorPrivado,
+    'juez': Juez,
+    'loquero': Loquero,
+    'marinero': Marinero,
+    'medico': Medico,
+    'militar': Militar,
+    'misionero': Misionero,
+    'musico': Musico,
+    'periodista': Periodista,
+    'piloto-aviador': PilotoAviador,
+    'professor': Professor
+
+
+
+
 
 
 
