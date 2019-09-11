@@ -51,6 +51,12 @@ import Musico from "./musico";
 import Periodista from "./periodista";
 import PilotoAviador from "./piloto-aviador";
 import Professor from "./professor";
+import Psicoanalista from "./psicoanalista";
+import Psiquiatra from "./psiquiatra";
+import Secretario from "./secretario";
+import Sindicalista from "./sindicalista";
+import Vagabundo from "./vagabundo";
+import Vendedor from "./vendedor";
 
 export const ocupaciones = {
     'acrobata': Acrobata,
@@ -104,7 +110,13 @@ export const ocupaciones = {
     'musico': Musico,
     'periodista': Periodista,
     'piloto-aviador': PilotoAviador,
-    'professor': Professor
+    'professor': Professor,
+    'psicoanalista': Psicoanalista,
+    'psiquiatra': Psiquiatra,
+    'secretario': Secretario,
+    'sindicalista': Sindicalista,
+    'vagabundo': Vagabundo,
+    'vendedor': Vendedor
 
 
 
