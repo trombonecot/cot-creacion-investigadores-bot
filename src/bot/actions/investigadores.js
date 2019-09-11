@@ -56,7 +56,7 @@ export function addInvestigador() {
                     text += printHabilidadesCustom(text, investigador);
                 } else {
                     text += printHabilidades(text, investigador);
-                    ctx.wizard.selectStep(6);
+                    ctx.wizard.selectStep(4);
                 }
 
                 ctx.reply(text);
@@ -97,7 +97,7 @@ export function addInvestigador() {
                 if (!investigador.habilidades[habilidad].class) {
                     ctx.reply(`Tienes que escoger una habilidad de tu ocupación.`);
                 } else {
-                    ctx.reply(`${habilidad} tiene actualmente ${investigador.habilidades[habilidad].value} puntos.\n ¿Cuantos puntos (${investigador.puntos_habilidad} disponibles) quieres gastar?`);
+                    ctx.reply(`${habilidad} tiene actualmente ${investigador.habilidades[habilidad].value} puntos para ocupación.\n ¿Cuantos puntos (${investigador.puntos_habilidad} disponibles) quieres gastar?`);
                     return ctx.wizard.next()
                 }
             }
