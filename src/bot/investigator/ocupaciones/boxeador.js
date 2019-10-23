@@ -1,4 +1,4 @@
-import { COMBATIR_PELEA, DESCUBRIR, ESQUIVAR, INTIMIDAR } from "../habilidades";
+import { COMBATIR_PELEA, DESCUBRIR, ESQUIVAR, INTIMIDAR, SALTAR } from "../habilidades";
 
 class Boxeador {
 
