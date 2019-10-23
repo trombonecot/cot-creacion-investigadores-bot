@@ -5,4 +5,7 @@ const bot = new Bot(config.token);
 
 bot.configure();
 
+try {
 bot.start();
+} catch(e) {
+}
