@@ -36,13 +36,24 @@ export function addInvestigador() {
                 investigador.setEdad(edad);
                 adaptarEdad(investigador);
 
-                let text = "Asignación de caracteristicas.\n Valores disponibles:\n";
+                let text = "Asignación de caracteristicas.\n";
+
+                text += "FUE: Fuerza\n";
+                text += "CON: Constitución\n";
+                text += "DES: Destreza \n";
+                text += "APA: Apariencia\n";
+                text += "POD: Poder\n";
+                text += "TAM: Tamaño\n";
+                text += "INT: Inteligéncia \n";
+                text += "EDU: Nivel de educación. \n";
+
+                text += "Valores disponibles:\n";
 
                 available_values.forEach((value, index) => {
                     text += `${index}: ${value}\n`;
                 });
 
-                text += `¿Qué valor quieres asignar a ${caracteristicas[0]}?`;
+                text += `¿Qué valor quieres asignar a ${caracteristicas[0].toUpperCase()}?`;
                 ctx.reply(text)
 
                 return ctx.wizard.next()
