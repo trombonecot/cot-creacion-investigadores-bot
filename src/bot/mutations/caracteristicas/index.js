@@ -45,6 +45,13 @@ export function calcularAttributosCombat(investigador) {
     delete investigador.habilidades.custom;
 }
 
+
+export const available_values = [40, 50, 50, 50, 60, 60, 70, 80];
+export const caracteristicas = [
+    'fue', 'con', 'des', 'apa', 'pod', 'tam', 'int', 'edu'
+]
+
+
 export function generateCaracteristicas(investigador) {
     const basicHab = ['fue', 'con', 'des', 'apa', 'pod'],
     extendedHab = ['tam', 'int', 'edu'];

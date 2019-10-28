@@ -2,7 +2,7 @@ import WizardScene from 'telegraf/scenes/wizard';
 import db from '../../bd';
 import { ocupaciones } from '../investigator/ocupaciones';
 import Investigador from '../investigator';
-import { generateCaracteristicas, calcularAttributosCombat } from '../mutations/caracteristicas';
+import { generateCaracteristicas, calcularAttributosCombat, available_values, caracteristicas } from '../mutations/caracteristicas';
 import { adaptarEdad } from '../mutations/edad';
 import { getOcupaciones, printHabilidadesCustom, printHabilidades, getHabilidadForCustom, getHabilidad } from './utils';
 import { printInvestigador } from '../services/generator';
@@ -36,9 +36,42 @@ export function addInvestigador() {
                 investigador.setEdad(edad);
                 adaptarEdad(investigador);
 
-                ctx.reply(getOcupaciones())
+                let text = "Asignación de caracteristicas.\n Valores disponibles:\n";
+
+                available_values.forEach((value, index) => {
+                    text += `${index}: ${value}\n`;
+                });
+
+                text += `¿Qué valor quieres asignar a ${caracteristicas[0]}?`;
+                ctx.reply(text)
 
                 return ctx.wizard.next()
+            }
+        },
+        (ctx) => {
+            //3.5
+            const indice = ctx.message.text;
+
+            if (isNaN(indice) || indice < 0 || indice > available_values.length) {
+                ctx.reply(`Valor no disponible. Introduce un indice entre 0 y ${available_values.length-1}:`);
+            } else {
+                investigador.caracteristicas[caracteristicas.shift()] = available_values[indice];
+
+                available_values.splice(indice,1);
+
+                if (caracteristicas.length == 0) {
+                    ctx.reply(getOcupaciones())
+                    return ctx.wizard.next()
+                } else {
+                    let text = "Asignación de caracteristicas.\n Valores disponibles:\n";
+
+                    available_values.forEach((value, index) => {
+                        text += `${index}: ${value}\n`;
+                    });
+    
+                    text += `¿Qué valor quieres asignar a ${caracteristicas[0]}?`;
+                    ctx.reply(text)
+                }
             }
         },
         (ctx) => {
