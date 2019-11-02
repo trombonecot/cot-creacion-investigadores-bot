@@ -21,7 +21,8 @@ export function addInvestigador() {
         (ctx) => {
             //2
             investigador = new Investigador(ctx.from.id, ctx.message.text);
-            generateCaracteristicas(investigador);
+
+            console.log(`Creado investigador: ${ctx.from.id} (${ctx.message.text})`);
 
             ctx.reply('Edad del investigador:');
             return ctx.wizard.next();
@@ -30,13 +31,15 @@ export function addInvestigador() {
             //3
             const edad = ctx.message.text;
 
+            console.log(`Edad:${ctx.message.text}`);
+
             if (isNaN(edad) || edad < 15 || edad > 88) {
                 ctx.reply('Edad incorrecta. Introduce una edad entre 15 y 88:');
+                console.log(`Edad incorrecta`);
             } else {
                 investigador.setEdad(edad);
-                adaptarEdad(investigador);
-
-                let text = "Asignación de caracteristicas.\n";
+                
+                let text = "Asignación de caracteristicas.\n\n";
 
                 text += "FUE: Fuerza\n";
                 text += "CON: Constitución\n";
@@ -63,6 +66,8 @@ export function addInvestigador() {
             //3.5
             const indice = ctx.message.text;
 
+            console.log(`Caracteristica para ${caracteristicas} de ${ctx.message.text}`);
+
             if (isNaN(indice) || indice < 0 || indice > available_values.length) {
                 ctx.reply(`Valor no disponible. Introduce un indice entre 0 y ${available_values.length-1}:`);
             } else {
@@ -71,7 +76,8 @@ export function addInvestigador() {
                 available_values.splice(indice,1);
 
                 if (caracteristicas.length == 0) {
-                    ctx.reply(getOcupaciones())
+                    ctx.reply(getOcupaciones());
+                    adaptarEdad(investigador);
                     return ctx.wizard.next()
                 } else {
                     let text = "Asignación de caracteristicas.\n Valores disponibles:\n";
@@ -88,6 +94,8 @@ export function addInvestigador() {
         (ctx) => {
             //4
             const ocupacionIndex = ctx.message.text;
+
+            console.log(`Ocupacion index ${ocupacionIndex}`);
 
             if (isNaN(ocupacionIndex) || ocupacionIndex > Object.keys(ocupaciones).length) {
                 ctx.reply('Ocupación incorrecta. Elige una:')
@@ -111,6 +119,8 @@ export function addInvestigador() {
             //5
             const hab = ctx.message.text;
 
+            console.log(`Hbailidad index ${hab}`);
+
             if (isNaN(hab)){
                 ctx.reply('Escoge una habilidad indicando el número de habilidad (que sea de ocupación):');
             }else {
@@ -133,6 +143,8 @@ export function addInvestigador() {
             //6
             const hab = ctx.message.text;
 
+            console.log(`Hbailidad escoge ${hab}`);
+
             if (isNaN(hab)){
                 ctx.reply('Escoge una habilidad indicando el número de habilidad (que sea de ocupación):');
             }else {
@@ -149,6 +161,8 @@ export function addInvestigador() {
         (ctx) => {
             // 7
             let puntos = ctx.message.text;
+
+            console.log(`Hbailidad puntos ${puntos}`);
 
             if (isNaN(puntos) || puntos < 0 || puntos > investigador.puntos_habilidad || (investigador.habilidades[habilidad].value + parseInt(puntos) > 90)){
                 ctx.reply('Una habilidad sólo puede llegar a 99 puntos.');
@@ -173,6 +187,8 @@ export function addInvestigador() {
             //8
             const hab = ctx.message.text;
 
+            console.log(`Hbailidad escoge ${hab}`);
+
             if (isNaN(hab)){
                 ctx.reply('Escoge una habilidad indicando el número de habilidad:');
             }else {
@@ -185,6 +201,8 @@ export function addInvestigador() {
         (ctx) => {
             // 9
             let puntos = ctx.message.text;
+
+            console.log(`Hbailidad puntos ${puntos}`);
 
             if (isNaN(puntos) || puntos < 0 || puntos > investigador.puntos_habilidad || (investigador.habilidades[habilidad].value + parseInt(puntos) > 90)){
                 ctx.reply('Una habilidad sólo puede llegar a 90 puntos.');
@@ -201,6 +219,8 @@ export function addInvestigador() {
                     ctx.reply(printInvestigador(investigador));
 
                     db.insert(investigador);
+
+                    console.log(`Investigador terminado`);
                     return ctx.scene.leave();
                 }
             }

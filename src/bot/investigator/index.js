@@ -7,6 +7,7 @@ class Investigador {
     constructor (playerId, name) {
         this.playerId = playerId;
         this.name = name;
+        this.caracteristicas = {};
     }
 
     setEdad(edad) {
