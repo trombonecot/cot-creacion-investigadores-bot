@@ -47,7 +47,7 @@ export function calcularAttributosCombat(investigador) {
 
 
 export const available_values = [40, 50, 50, 50, 60, 60, 70, 80];
-export const caracteristicas = [
+export const originalCaracteristicas = [
     'fue', 'con', 'des', 'apa', 'pod', 'tam', 'int', 'edu'
 ]
 

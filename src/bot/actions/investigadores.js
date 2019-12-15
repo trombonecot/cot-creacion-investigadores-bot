@@ -2,7 +2,7 @@ import WizardScene from 'telegraf/scenes/wizard';
 import db from '../../bd';
 import { ocupaciones } from '../investigator/ocupaciones';
 import Investigador from '../investigator';
-import { generateCaracteristicas, calcularAttributosCombat, available_values, caracteristicas } from '../mutations/caracteristicas';
+import { calcularAttributosCombat, available_values, originalCaracteristicas } from '../mutations/caracteristicas';
 import { adaptarEdad } from '../mutations/edad';
 import { getOcupaciones, printHabilidadesCustom, printHabilidades, getHabilidadForCustom, getHabilidad } from './utils';
 import { printInvestigador } from '../services/generator';
@@ -10,7 +10,8 @@ import { printInvestigador } from '../services/generator';
 
 export function addInvestigador() {
     let investigador = {},
-        habilidad = null;
+        habilidad = null,
+        caracteristicas = originalCaracteristicas.slice(0);
 
     const addWizard = new WizardScene('add-investigador',
         (ctx) => {
